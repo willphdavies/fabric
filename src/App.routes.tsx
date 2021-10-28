@@ -5,26 +5,24 @@ import {
   Redirect,
 } from "react-router-dom";
 import { Login, Info } from "./View";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "./AuthProvider";
 import { CircularProgress } from "@mui/material";
 export function AppRoutes() {
   const { loading } = useContext(AuthContext);
-  return (
-    loading ? (
-      <CircularProgress />
-    ) : (
-      <Router>
-        <Switch>
-          <Route path="/" exact={true}>
-            <Login></Login>
-          </Route>
-          <PrivateRoute path="/info" exact={true}>
-            <Info></Info>
-          </PrivateRoute>
-        </Switch>
-      </Router>
-    )
+  return loading ? (
+    <CircularProgress />
+  ) : (
+    <Router>
+      <Switch>
+        <Route path="/" exact={true}>
+          <Login></Login>
+        </Route>
+        <PrivateRoute path="/info" exact={true}>
+          <Info></Info>
+        </PrivateRoute>
+      </Switch>
+    </Router>
   );
 }
 
@@ -33,14 +31,13 @@ type PrivateRouteProps = {
   path: string;
   exact: boolean;
 };
-function PrivateRoute(props: PrivateRouteProps) {
+export function PrivateRoute(props: PrivateRouteProps) {
   const { children, path, exact } = props;
   const { user, authenticate } = useContext(AuthContext);
-  if (user == null && localStorage.getItem('auth_token')) {
+  if (user == null && localStorage.getItem("auth_token")) {
     authenticate();
-    return <></>
+    return <></>;
   }
-
   return (
     <Route
       path={path}

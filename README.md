@@ -1,6 +1,7 @@
-# Getting Started with Create React App
+# Fabric App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+the backend is a HAPI Server
 
 ## Available Scripts
 
