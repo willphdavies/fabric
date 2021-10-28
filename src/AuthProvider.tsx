@@ -2,7 +2,7 @@ import { useState, createContext } from "react";
 import Api from "./api/Api";
 
 type AuthContextProps = {
-  user: User | null
+  user: AuthenticatedUser | null
   loading: boolean
   login: (_: string, _password: string) => Promise<boolean>
   logout: () => void
@@ -17,42 +17,46 @@ const initalContext: AuthContextProps = {
 };
 export const AuthContext = createContext(initalContext);
 
-type User = {
+type AuthenticatedUser = {
   username: string;
   applicationPath: string;
   currentTime: string;
 };
 type AuthResponse = {
   success: boolean;
-  result: User;
+  result: AuthenticatedUser;
 };
 type AuthProviderProps = {
   children: JSX.Element
 }
 export function AuthProvider(props: AuthProviderProps) {
   const { children } = props
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthenticatedUser | null>(null);
   const [loading, setLoading] = useState<boolean>(false)
 
-  const authenticate = () => {
-    setLoading(true);
-    return Api.get("/api/user/me", {})
-      .then((response: AuthResponse) => {
-        setLoading(false);
-        if (response.success) {
-          setUser(response.result);
-          return true
-        }
-        localStorage.removeItem('auth_token');
-        return false;
-      })
-      .catch((err: any) => {
-        localStorage.removeItem('auth_token');
-        throw err;
-      });
+  function authenticate() {
+    if (!loading) {
+      setLoading(true);
+      return Api.get("/api/user/me", {})
+        .then((response: AuthResponse) => {
+          setLoading(false);
+          if (response.success) {
+            setUser(response.result);
+            return true
+          }
+          localStorage.removeItem('auth_token');
+          return false;
+        })
+        .catch((err: any) => {
+          setLoading(false);
+          localStorage.removeItem('auth_token');
+          throw err;
+        });
     }
+    return Promise.resolve(true);
+  }
 
-  const login = (username: string, password: string) => {
+  function login(username: string, password: string) {
     return Api.post('/api/authenticate', { params: { username, password } })
       .then((response) => {
         if (response.success) {
@@ -64,7 +68,7 @@ export function AuthProvider(props: AuthProviderProps) {
       .catch((err: any) => { throw err });
   }
 
-  const logout = () => {
+  function logout() {
     setUser(null);
     localStorage.removeItem('auth_token');
   }
