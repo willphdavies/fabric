@@ -1,0 +1,12 @@
+.Info {
+  max-width: 600px;
+  width: 100%;
+}
+.Info .Info__card table {
+  text-align: left;
+  width: 100%;
+}
+.Info .Info__card .card__actions {
+  display: flex;
+  justify-content: flex-end;
+}

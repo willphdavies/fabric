@@ -1,0 +1,8 @@
+.Login {
+  max-width: 600px;
+  width: 100%;
+}
+.Login .Login__card .card__actions {
+  display: flex;
+  justify-content: flex-end;
+}
