@@ -53,7 +53,7 @@ export function AuthProvider(props: AuthProviderProps) {
           throw err;
         });
     }
-    return Promise.resolve(true);
+    return Promise.resolve(false);
   }
 
   function login(username: string, password: string) {

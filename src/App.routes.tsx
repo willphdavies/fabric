@@ -35,8 +35,8 @@ type PrivateRouteProps = {
 };
 function PrivateRoute(props: PrivateRouteProps) {
   const { children, path, exact } = props;
-  const { user, authenticate, loading } = useContext(AuthContext);
-  if (user == null && localStorage.getItem('auth_token') && !loading) {
+  const { user, authenticate } = useContext(AuthContext);
+  if (user == null && localStorage.getItem('auth_token')) {
     authenticate();
     return <></>
   }
